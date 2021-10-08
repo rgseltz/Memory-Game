@@ -1,4 +1,9 @@
 const gameContainer = document.getElementById("game");
+let firstClick;
+let secondClick;
+let clickEnabled = true;
+let c = 0;
+
 
 const COLORS = [
   "red",
@@ -12,6 +17,7 @@ const COLORS = [
   "orange",
   "purple"
 ];
+const matchPairs = COLORS.length / 2;
 
 // here is a helper function to shuffle an array
 // it returns the same array with values shuffled
@@ -60,7 +66,45 @@ function createDivsForColors(colorArray) {
 // TODO: Implement this function!
 function handleCardClick(event) {
   // you can use event.target to see which element was clicked
-  console.log("you just clicked", event.target);
+  // console.log("you just clicked", event.target);
+  if(!clickEnabled) {
+    return;
+  }
+  if (!firstClick) {
+    firstClick = event.target;
+    console.log('first click');
+    const divColor = event.target.className;
+  event.target.style.backgroundColor = divColor;
+    return;
+  }
+  secondClick = event.target;
+  const divColor = event.target.className;
+  event.target.style.backgroundColor = divColor;
+  console.log(secondClick);
+  clickEnabled = false;
+  if (firstClick.style.backgroundColor === secondClick.style.backgroundColor) {
+    console.log('MATCH!!');
+    firstClick = null;
+    secondClick = null;
+    clickEnabled = true;
+    c++;
+  }
+  else {
+    setTimeout(function(){
+    firstClick.style.backgroundColor = "";
+    secondClick.style.backgroundColor = "";
+    firstClick = null;
+    secondClick= null;
+    clickEnabled = true;
+    },1000);
+  }
+  if (c === matchPairs) {
+    const h2 = document.createElement('h2');
+    h2.innerText = "You Won!";
+    const h1 = document.querySelector('h1');
+    h1.appendChild(h2);
+  }
+
 }
 
 // when the DOM loads
