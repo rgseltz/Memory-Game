@@ -72,7 +72,7 @@ function handleCardClick(event) {
   }
   if (!firstClick) {
     firstClick = event.target;
-    console.log('first click');
+    console.log('first click', firstClick);
     const divColor = event.target.className;
   event.target.style.backgroundColor = divColor;
     return;
@@ -99,10 +99,17 @@ function handleCardClick(event) {
     },1000);
   }
   if (c === matchPairs) {
+    let winCount = 0;
     const h2 = document.createElement('h2');
     h2.innerText = "You Won!";
     const h1 = document.querySelector('h1');
     h1.appendChild(h2);
+    winCount++;
+    const span = document.createElement('span');
+    span.innerText = `Number of Wins : ${winCount}`;
+    h2.appendChild(span);
+    firstClick.style.backgroundColor = "";
+    secondClick.style.backgroundColor = "";
   }
 
 }
