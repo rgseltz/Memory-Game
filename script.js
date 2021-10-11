@@ -77,19 +77,32 @@ function handleCardClick(event) {
   event.target.style.backgroundColor = divColor;
     return;
   }
+  else if(!secondClick) {
   secondClick = event.target;
   const divColor = event.target.className;
   event.target.style.backgroundColor = divColor;
   console.log(secondClick);
   clickEnabled = false;
-  if (firstClick.style.backgroundColor === secondClick.style.backgroundColor) {
+  }
+  else {
+    return;
+  }
+  checkMatch();
+  
+  function checkMatch() {
+    let isMatch = (firstClick.style.backgroundColor === secondClick.style.backgroundColor);
+    isMatch ? matched() : notMatched();
+  }
+
+  function matched() {
     console.log('MATCH!!');
     firstClick = null;
     secondClick = null;
     clickEnabled = true;
     c++;
   }
-  else {
+  
+  function notMatched() {
     setTimeout(function(){
     firstClick.style.backgroundColor = "";
     secondClick.style.backgroundColor = "";
@@ -98,6 +111,7 @@ function handleCardClick(event) {
     clickEnabled = true;
     },1000);
   }
+  
   if (c === matchPairs) {
     let winCount = 0;
     const h2 = document.createElement('h2');
