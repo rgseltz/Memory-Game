@@ -1,6 +1,6 @@
 const gameContainer = document.getElementById("game");
-let firstClick;
-let secondClick;
+let card1;
+let card2;
 let clickEnabled = true;
 let c = 0;
 
@@ -70,44 +70,44 @@ function handleCardClick(event) {
   if(!clickEnabled) {
     return;
   }
-  if (!firstClick) {
-    firstClick = event.target;
-    console.log('first click', firstClick);
+  if (!card1) {
+    card1 = event.target;
+    console.log('first click', card1);
     const divColor = event.target.className;
-  event.target.style.backgroundColor = divColor;
+    event.target.style.backgroundColor = divColor;
     return;
-  }
-  else if(!secondClick) {
-  secondClick = event.target;
-  const divColor = event.target.className;
-  event.target.style.backgroundColor = divColor;
-  console.log(secondClick);
-  clickEnabled = false;
+  } else if (!card2) {
+    card2 = event.target;
+    const divColor = event.target.className;
+    event.target.style.backgroundColor = divColor;
+    console.log(card2);
+    clickEnabled = false;
   }
   else {
-    return;
+    return console.log ('there is bug');
   }
+  
   checkMatch();
   
   function checkMatch() {
-    let isMatch = (firstClick.style.backgroundColor === secondClick.style.backgroundColor);
+    let isMatch = (card1.style.backgroundColor === card2.style.backgroundColor);
     isMatch ? matched() : notMatched();
   }
 
   function matched() {
     console.log('MATCH!!');
-    firstClick = null;
-    secondClick = null;
+    card1 = null;
+    card2 = null;
     clickEnabled = true;
     c++;
   }
   
   function notMatched() {
     setTimeout(function(){
-    firstClick.style.backgroundColor = "";
-    secondClick.style.backgroundColor = "";
-    firstClick = null;
-    secondClick= null;
+    card1.style.backgroundColor = "";
+    card2.style.backgroundColor = "";
+    card1 = null;
+    card2= null;
     clickEnabled = true;
     },1000);
   }
@@ -122,8 +122,8 @@ function handleCardClick(event) {
     const span = document.createElement('span');
     span.innerText = `Number of Wins : ${winCount}`;
     h2.appendChild(span);
-    firstClick.style.backgroundColor = "";
-    secondClick.style.backgroundColor = "";
+    card1.style.backgroundColor = "";
+    card2.style.backgroundColor = "";
   }
 
 }
