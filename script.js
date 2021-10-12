@@ -1,7 +1,7 @@
 const gameContainer = document.getElementById("game");
 let card1;
 let card2;
-let clickEnabled = true;
+let isGameInProgress = true;
 let c = 0;
 
 
@@ -67,51 +67,47 @@ function createDivsForColors(colorArray) {
 function handleCardClick(event) {
   // you can use event.target to see which element was clicked
   // console.log("you just clicked", event.target);
-  if(!clickEnabled) {
-    return;
-  }
   if (!card1) {
     card1 = event.target;
     console.log('first click', card1);
     const divColor = event.target.className;
     event.target.style.backgroundColor = divColor;
     return;
-  } else if (!card2) {
+  } else if (!card2 && card1 !==event.target) {
     card2 = event.target;
     const divColor = event.target.className;
     event.target.style.backgroundColor = divColor;
     console.log(card2);
-    clickEnabled = false;
   }
   else {
-    return console.log ('there is bug');
+    return;
   }
-  
   checkMatch();
-  
+}
+  //called after card2 then calls functions if they match or dont match
   function checkMatch() {
     let isMatch = (card1.style.backgroundColor === card2.style.backgroundColor);
     isMatch ? matched() : notMatched();
   }
-
+  //called if second card matches, resetting cards and turning off event listener for the two cards that matched
   function matched() {
+    c++;
     console.log('MATCH!!');
+    card1.removeEventListener('click', handleCardClick);
+    card2.removeEventListener('click', handleCardClick);
     card1 = null;
     card2 = null;
-    clickEnabled = true;
-    c++;
   }
-  
+  //called when card1 does not match card2, turns cards back over and resets card1 and card 2
   function notMatched() {
     setTimeout(function(){
     card1.style.backgroundColor = "";
     card2.style.backgroundColor = "";
     card1 = null;
     card2= null;
-    clickEnabled = true;
     },1000);
   }
-  
+  //this used to work but now is broken -- supposed to append win heading and win count
   if (c === matchPairs) {
     let winCount = 0;
     const h2 = document.createElement('h2');
@@ -126,7 +122,7 @@ function handleCardClick(event) {
     card2.style.backgroundColor = "";
   }
 
-}
+
 
 // when the DOM loads
 createDivsForColors(shuffledColors);
