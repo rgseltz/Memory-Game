@@ -3,6 +3,8 @@ let card1;
 let card2;
 let isGameInProgress = true;
 let c = 0;
+let winCount = 0;
+const reset = document.querySelector('#reset');
 
 
 const COLORS = [
@@ -70,59 +72,63 @@ function handleCardClick(event) {
   if (!card1) {
     card1 = event.target;
     console.log('first click', card1);
-    const divColor = event.target.className;
-    event.target.style.backgroundColor = divColor;
+    revealColor(event);
     return;
   } else if (!card2 && card1 !==event.target) {
     card2 = event.target;
-    const divColor = event.target.className;
-    event.target.style.backgroundColor = divColor;
-    console.log(card2);
+    revealColor(event);
   }
   else {
     return;
   }
   checkMatch();
+  //check if all cards matched, and if yes, throws win alert
+  isWin();
 }
-  //called after card2 then calls functions if they match or dont match
-  function checkMatch() {
+//reveal element bg color
+function revealColor(event) {
+  const divColor = event.target.className;
+  event.target.style.backgroundColor = divColor;
+}
+
+//called after card2 then calls functions if they match or dont match
+function checkMatch() {
     let isMatch = (card1.style.backgroundColor === card2.style.backgroundColor);
     isMatch ? matched() : notMatched();
-  }
-  //called if second card matches, resetting cards and turning off event listener for the two cards that matched
-  function matched() {
+}
+//called if second card matches, resetting cards and turning off event listener for the two cards that matched
+function matched() {
     c++;
     console.log('MATCH!!');
     card1.removeEventListener('click', handleCardClick);
     card2.removeEventListener('click', handleCardClick);
     card1 = null;
     card2 = null;
-  }
-  //called when card1 does not match card2, turns cards back over and resets card1 and card 2
-  function notMatched() {
+}
+//called when card1 does not match card2, turns cards back over and resets card1 and card 2
+function notMatched() {
     setTimeout(function(){
     card1.style.backgroundColor = "";
     card2.style.backgroundColor = "";
     card1 = null;
     card2= null;
     },1000);
-  }
-  //this used to work but now is broken -- supposed to append win heading and win count
-  if (c === matchPairs) {
-    let winCount = 0;
-    const h2 = document.createElement('h2');
-    h2.innerText = "You Won!";
-    const h1 = document.querySelector('h1');
-    h1.appendChild(h2);
-    winCount++;
-    const span = document.createElement('span');
-    span.innerText = `Number of Wins : ${winCount}`;
-    h2.appendChild(span);
-    card1.style.backgroundColor = "";
-    card2.style.backgroundColor = "";
-  }
+}
 
+reset.addEventListener('click',resetCards);
 
+function isWin() {
+    if (c === matchPairs) alert('You Won!');
+}
+
+function resetCards(event) {
+  const cards = gameContainer.querySelectorAll('div');
+  for (card of cards) {
+    card.style.backgroundColor = '';
+    card.style.backgroundColor = null;
+    card.addEventListener('click',handleCardClick);
+  }
+}
 
 // when the DOM loads
 createDivsForColors(shuffledColors);
